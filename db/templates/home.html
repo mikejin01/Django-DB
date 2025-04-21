@@ -1,1 +1,74 @@
-<h1>hello world django123!</h1>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Building Directory</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+        }
+        h1 {
+            text-align: center;
+        }
+        form {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        input[type="text"] {
+            padding: 8px;
+            width: 300px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: auto;
+        }
+        th, td {
+            padding: 10px 15px;
+            border: 1px solid #ccc;
+        }
+        th {
+            background-color: #eee;
+        }
+    </style>
+</head>
+<body>
+    <h1>Building Directory</h1>
+
+    <form method="get">
+        <input type="text" name="q" placeholder="Search by address, BIN, or customer" value="{{ query|default:'' }}">
+        <button type="submit">Search</button>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Address</th>
+                <th>BBL</th>
+                <th>BIN</th>
+                <th>Service</th>
+                <th>Customer Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for building in buildings %}
+            <tr>
+                <td>{{ building.address }}</td>
+                <td>{{ building.BBL }}</td>
+                <td>{{ building.BIN }}</td>
+                <td>{{ building.service.name }}</td>
+                <td>{{ building.customer.first_name }} {{ building.customer.last_name }}</td>
+                <td>{{ building.customer.email }}</td>
+                <td>{{ building.customer.phone }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" style="text-align: center;">No results found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
