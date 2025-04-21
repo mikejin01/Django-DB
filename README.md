@@ -1,5 +1,5 @@
-# Django-Backend
-A generic Django backend providing structured, RESTful API access to multiple frontend clients.
+# Django-Backend 2025
+A generic Django backend providing structured, RESTful API access to multiple frontend clients. mikejin
 
 ## Development Environment Setup
 Create a python virtual environment. Here it is named `.venv` and is placed in the root folder. You can place it anywhere you'd like and name it whatever you'd like.
