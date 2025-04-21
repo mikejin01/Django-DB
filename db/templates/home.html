@@ -73,8 +73,8 @@
         </form>
 
         <div class="tabs">
-            <a href="?tab=buildings{% if query %}&q={{ query }}{% endif %}" class="{% if tab == 'buildings' %}active{% endif %}">Buildings</a>
-            <a href="?tab=customers{% if query %}&q={{ query }}{% endif %}" class="{% if tab == 'customers' %}active{% endif %}">Customers</a>
+            <a href="?tab=buildings" class="{% if tab == 'buildings' %}active{% endif %}">Buildings</a>
+            <a href="?tab=customers" class="{% if tab == 'customers' %}active{% endif %}">Customers</a>
         </div>
 
         {% if tab == 'buildings' %}
