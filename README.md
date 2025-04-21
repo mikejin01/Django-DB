@@ -14,3 +14,9 @@ Install dependencies listed in `requirements.txt`.
 ```sh
 pip install -r requirements.txt
 ```
+
+## IMPORTANT!!!
+If you added other packages, do not forget to add them to `requirements.txt`
+```sh
+pip freeze > requirements.txt
+```
