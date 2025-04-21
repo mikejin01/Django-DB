@@ -11,14 +11,17 @@ def home(request):
     customers = Customer.objects.all()
 
     if query:
-        if tab == 'buildings':
-            buildings = buildings.filter(
-                Q(address__icontains=query) |
-                Q(BIN__icontains=query) |
-                Q(customer__first_name__icontains=query) |
-                Q(customer__last_name__icontains=query)
-            )
-        elif tab == 'customers':
+        # Always filter buildings by BBL (no matter which tab is selected)
+        buildings = buildings.filter(
+            Q(address__icontains=query) |
+            Q(BIN__icontains=query) |
+            Q(BBL__icontains=query) |
+            Q(customer__first_name__icontains=query) |
+            Q(customer__last_name__icontains=query)
+        )
+
+        # Only filter customers if the tab is 'customers'
+        if tab == 'customers':
             customers = customers.filter(
                 Q(first_name__icontains=query) |
                 Q(last_name__icontains=query) |
