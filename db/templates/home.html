@@ -1,78 +1,107 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Building Directory</title>
+    <title>Directory</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 40px;
+        body { font-family: Arial; padding: 40px; }
+        h1, form, .tabs { text-align: center; }
+        .tabs a {
+            margin: 0 10px;
+            padding: 10px 20px;
+            text-decoration: none;
+            border: 1px solid #ccc;
+            background-color: #f5f5f5;
+            color: #333;
+            border-radius: 5px;
         }
-        h1 {
-            text-align: center;
-        }
-        form {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        input[type="text"] {
-            padding: 8px;
-            width: 300px;
+        .tabs a.active {
+            background-color: #007BFF;
+            color: white;
+            border-color: #007BFF;
         }
         table {
             width: 100%;
+            margin-top: 20px;
             border-collapse: collapse;
-            margin: auto;
         }
         th, td {
-            padding: 10px 15px;
             border: 1px solid #ccc;
+            padding: 10px;
         }
-        th {
-            background-color: #eee;
-        }
+        th { background-color: #eee; }
     </style>
 </head>
 <body>
-    <h1>Building Directory</h1>
 
-    <form method="get">
-        <input type="text" name="q" placeholder="Search by address, BIN, or customer" value="{{ query|default:'' }}">
-        <button type="submit">Search</button>
-    </form>
+<h1>Directory</h1>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Address</th>
-                <th>BBL</th>
-                <th>BIN</th>
-                <th>Service</th>
-                <th>Customer Name</th>
-                <th>Email</th>
-                <th>Phone</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for building in buildings %}
-            <tr>
-                <td>{{ building.address }}</td>
-                <td>{{ building.BBL }}</td>
-                <td>{{ building.BIN }}</td>
-                <td>
-                    {% for service in building.services.all %}
-                        {{ service.name }}{% if not forloop.last %}, {% endif %}
-                    {% endfor %}
-                </td>
-                <td>{{ building.customer.first_name }} {{ building.customer.last_name }}</td>
-                <td>{{ building.customer.email }}</td>
-                <td>{{ building.customer.phone }}</td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="7" style="text-align: center;">No results found.</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+<form method="get">
+    <input type="hidden" name="tab" value="{{ tab }}">
+    <input type="text" name="q" placeholder="Search..." value="{{ query|default:'' }}">
+    <button type="submit">Search</button>
+</form>
+
+<div class="tabs">
+    <a href="?tab=buildings{% if query %}&q={{ query }}{% endif %}" class="{% if tab == 'buildings' %}active{% endif %}">Buildings</a>
+    <a href="?tab=customers{% if query %}&q={{ query }}{% endif %}" class="{% if tab == 'customers' %}active{% endif %}">Customers</a>
+</div>
+
+{% if tab == 'buildings' %}
+<table>
+    <thead>
+        <tr>
+            <th>Address</th>
+            <th>BBL</th>
+            <th>BIN</th>
+            <th>Services</th>
+            <th>Customer</th>
+            <th>Email</th>
+            <th>Phone</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for building in buildings %}
+        <tr>
+            <td>{{ building.address }}</td>
+            <td>{{ building.BBL }}</td>
+            <td>{{ building.BIN }}</td>
+            <td>
+                {% for service in building.services.all %}
+                    {{ service.name }}{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            </td>
+            <td>{{ building.customer.first_name }} {{ building.customer.last_name }}</td>
+            <td>{{ building.customer.email }}</td>
+            <td>{{ building.customer.phone }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="7" style="text-align:center;">No buildings found.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% elif tab == 'customers' %}
+<table>
+    <thead>
+        <tr>
+            <th>Full Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for customer in customers %}
+        <tr>
+            <td>{{ customer.first_name }} {{ customer.last_name }}</td>
+            <td>{{ customer.email }}</td>
+            <td>{{ customer.phone }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="3" style="text-align:center;">No customers found.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+
 </body>
 </html>
