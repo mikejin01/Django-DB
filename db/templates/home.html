@@ -58,7 +58,11 @@
                 <td>{{ building.address }}</td>
                 <td>{{ building.BBL }}</td>
                 <td>{{ building.BIN }}</td>
-                <td>{{ building.service.name }}</td>
+                <td>
+                    {% for service in building.services.all %}
+                        {{ service.name }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </td>
                 <td>{{ building.customer.first_name }} {{ building.customer.last_name }}</td>
                 <td>{{ building.customer.email }}</td>
                 <td>{{ building.customer.phone }}</td>

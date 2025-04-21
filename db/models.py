@@ -22,7 +22,7 @@ class Building(models.Model):
     address = models.CharField(max_length=100)
     BBL = models.CharField(max_length=30, default='')
     BIN = models.CharField(max_length=30, default='')
-    service = models.ForeignKey(Service, on_delete=models.CASCADE)
+    services = models.ManyToManyField(Service) 
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     def __str__(self):
         return self.address

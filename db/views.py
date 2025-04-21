@@ -5,7 +5,7 @@ from django.db.models import Q
 # Create your views here.
 def home(request):
     query = request.GET.get('q')
-    buildings = Building.objects.select_related('service', 'customer').all()
+    buildings = Building.objects.prefetch_related('services', 'customer').all()
 
     if query:
         buildings = buildings.filter(
