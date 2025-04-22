@@ -20,3 +20,4 @@ If you added other packages, do not forget to add them to `requirements.txt`
 ```sh
 pip freeze > requirements.txt
 ```
+Please also remember to update `devlog.md` where you document the development process. If there are design decisions, put them in `README.md`

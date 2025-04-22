@@ -2,22 +2,21 @@ from django.db import models
 import datetime
 
 
-# Client model remains unchanged as it fits the contact-related data
-class Client(models.Model):
-    contact_name = models.CharField(max_length=30)
-    phone1 = models.CharField(max_length=20)
-    phone2 = models.CharField(max_length=20, default='', blank=True)
-    email = models.EmailField(max_length=100)
-    
-    def __str__(self):
-        return self.contact_name  # Updated from f-string with first_name/last_name to match contact_name
+# Create your models here.
 
-# Service model remains unchanged; can be used for other services if needed
+class Client(models.Model):
+    first_name = models.CharField(max_length=30)
+    last_name = models.CharField(max_length=30)
+    phone = models.CharField(max_length=20)
+    email = models.EmailField(max_length=100)
+    def __str__(self):
+        return f'{self.first_name} {self.last_name}'
+
 class Service(models.Model):
     name = models.CharField(max_length=20)
-    
     def __str__(self):
         return self.name
+
 
 # Building model updated with additional fields from the Excel file
 class Building(models.Model):
@@ -70,6 +69,7 @@ class BuildingCompliance(models.Model):
     
     def __str__(self):
         return f"Compliance for {self.building.address}"
+
 
 
 

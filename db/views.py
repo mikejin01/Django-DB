@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Building, Customer
+from .models import Building, Client
 from django.db.models import Q
 
 # Create your views here.
@@ -7,8 +7,8 @@ def home(request):
     query = request.GET.get('q')
     tab = request.GET.get('tab', 'buildings')  # default to buildings
 
-    buildings = Building.objects.prefetch_related('services', 'customer').all()
-    customers = Customer.objects.all()
+    buildings = Building.objects.prefetch_related('services', 'client').all()
+    clients = Client.objects.all()
 
     if query:
         # Always filter buildings by BBL (no matter which tab is selected)
@@ -16,13 +16,13 @@ def home(request):
             Q(address__icontains=query) |
             Q(BIN__icontains=query) |
             Q(BBL__icontains=query) |
-            Q(customer__first_name__icontains=query) |
-            Q(customer__last_name__icontains=query)
+            Q(client__first_name__icontains=query) |
+            Q(client__last_name__icontains=query)
         )
 
-        # Only filter customers if the tab is 'customers'
-        if tab == 'customers':
-            customers = customers.filter(
+        # Only filter clients if the tab is 'clients'
+        if tab == 'clients':
+            clients = clients.filter(
                 Q(first_name__icontains=query) |
                 Q(last_name__icontains=query) |
                 Q(email__icontains=query)
@@ -32,5 +32,5 @@ def home(request):
         'tab': tab,
         'query': query,
         'buildings': buildings,
-        'customers': customers
+        'clients': clients
     })
