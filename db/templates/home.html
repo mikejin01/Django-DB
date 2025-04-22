@@ -13,7 +13,8 @@
             margin-bottom: 30px;
         }
         .container {
-            max-width: 1000px;
+            width: 100%;
+            max-width: none;
             margin: 0 auto;
         }
         form {
@@ -60,10 +61,13 @@
         th {
             background-color: #f0f0f0;
         }
+        .scrollable-table {
+            overflow-x: auto;
+        }
     </style>
 </head>
 <body>
-    <h1>Directory</h1>
+    <h1>SFE Directory</h1>
     <div class="container">
 
         <form method="get">
@@ -72,45 +76,75 @@
             <button type="submit">Search</button>
         </form>
 
+        <!-- Import Excel Form -->
+        <form method="post" enctype="multipart/form-data" action="{% url 'import_excel' %}">
+            {% csrf_token %}
+            <input type="file" name="excel_file" accept=".xlsx, .xls">
+            <button type="submit">Import</button>
+        </form>
+
+        <!-- Display messages if any -->
+        {% if messages %}
+            <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
         <div class="tabs">
             <a href="?tab=buildings" class="{% if tab == 'buildings' %}active{% endif %}">Buildings</a>
-            <a href="?tab=customers" class="{% if tab == 'customers' %}active{% endif %}">Customers</a>
+            <a href="?tab=customers" class="{% if tab == 'customers' %}active{% endif %}">Clients</a>
         </div>
 
         {% if tab == 'buildings' %}
-        <!-- Buildings Table -->
-        <table>
-            <thead>
-                <tr>
-                    <th>Address</th>
-                    <th>BBL</th>
-                    <th>BIN</th>
-                    <th>Services</th>
-                    <th>Customer</th>
-                    <th>Email</th>
-                    <th>Phone</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for building in buildings %}
-                <tr>
-                    <td>{{ building.address }}</td>
-                    <td>{{ building.BBL }}</td>
-                    <td>{{ building.BIN }}</td>
-                    <td>
-                        {% for service in building.services.all %}
-                            {{ service.name }}{% if not forloop.last %}, {% endif %}
-                        {% endfor %}
-                    </td>
-                    <td>{{ building.customer.first_name }} {{ building.customer.last_name }}</td>
-                    <td>{{ building.customer.email }}</td>
-                    <td>{{ building.customer.phone }}</td>
-                </tr>
-                {% empty %}
-                <tr><td colspan="7" style="text-align:center;">No buildings found.</td></tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <!-- Combined Buildings and Compliance Table -->
+        <div class="scrollable-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Address</th>
+                        <th>BBL</th>
+                        <th>BIN</th>
+                        <th>Services</th>
+                        <th>Customer</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>LL97 Schedule</th>
+                        <th>LL88 Needed</th>
+                        <th>DOB NOW Transaction #</th>
+                        <th>Payment Cleared</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for building in buildings %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'building_compliance_detail' building.id %}">{{ building.address }}</a>
+                        </td>
+                        <td>{{ building.BBL|floatformat:0 }}</td>
+                        <td>{{ building.BIN|floatformat:0 }}</td>
+                        <td>
+                            {% for service in building.services.all %}
+                                {{ service.name }}{% if not forloop.last %}, {% endif %}
+                            {% endfor %}
+                        </td>
+                        <td>{{ building.client.name }}</td> <!-- Fixed to use 'name' -->
+                        <td>{{ building.client.email }}</td>
+                        <td>{{ building.client.phone }}</td>
+                        <td>{{ building.buildingcompliance.ll97_schedule }}</td>
+                        <td>{{ building.buildingcompliance.ll88_needed }}</td>
+                        <td>{{ building.buildingcompliance.dob_now_transaction_number }}</td>
+                        <td>{% if building.buildingcompliance.payment_cleared %}Yes{% else %}No{% endif %}</td>
+                        <td><a href="{% url 'building_compliance_detail' building.id %}">View Details</a></td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="12" style="text-align:center;">No buildings found.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
 
         {% elif tab == 'customers' %}
         <!-- Customers Table -->
@@ -125,7 +159,7 @@
             <tbody>
                 {% for customer in customers %}
                 <tr>
-                    <td>{{ customer.first_name }} {{ customer.last_name }}</td>
+                    <td>{{ customer.name }}</td> <!-- Fixed to use 'name' -->
                     <td>{{ customer.email }}</td>
                     <td>{{ customer.phone }}</td>
                 </tr>

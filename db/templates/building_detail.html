@@ -1,0 +1,239 @@
+<!-- db/templates/building_detail.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Building Details for {{ building.address }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f9f9f9;
+        }
+        .content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            border-bottom: 2px solid #ccc;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #555;
+            margin-top: 20px;
+        }
+        p, ul {
+            margin: 10px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        a {
+            display: inline-block;
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        a:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <h1>Building Details for {{ building.address }}</h1>
+
+        <!-- Building Information Section -->
+        <h2>Building Information</h2>
+        <p><strong>Address:</strong> {{ building.address }}</p>
+        <p><strong>BBL:</strong> {{ building.BBL }}</p>
+        <p><strong>BIN:</strong> {{ building.BIN }}</p>
+        <p><strong>Number of BINs:</strong> {{ building.number_of_bins }}</p>
+        <p><strong>ZOLA Link:</strong> 
+            {% if building.zola_link %}
+                <a href="{{ building.zola_link }}">Link</a>
+            {% else %}
+                N/A
+            {% endif %}
+        </p>
+        <p><strong>BIS BBL Link:</strong> 
+            {% if building.bis_bbl_link %}
+                <a href="{{ building.bis_bbl_link }}">Link</a>
+            {% else %}
+                N/A
+            {% endif %}
+        </p>
+        <p><strong>BIS Link:</strong> 
+            {% if building.bis_link %}
+                <a href="{{ building.bis_link }}">Link</a>
+            {% else %}
+                N/A
+            {% endif %}
+        </p>
+        <p><strong>ZOLA GFA:</strong> {{ building.zola_gfa|default:"N/A" }}</p>
+        <p><strong>Number of Floors:</strong> {{ building.number_of_floors|default:"N/A" }}</p>
+        <p><strong>Basement Code:</strong> {{ building.basement_code|default:"N/A" }}</p>
+        <p><strong>Uniformly Adjusted GFA:</strong> {{ building.uniformly_adjusted_gfa|default:"N/A" }}</p>
+        <p><strong>Adjusted GFA:</strong> {{ building.adjusted_gfa|default:"N/A" }}</p>
+
+        <!-- Client Information Section -->
+        <h2>Client Information</h2>
+        <p><strong>Name:</strong> {{ building.client.name|default:"No client" }}</p>
+        <p><strong>Email:</strong> {{ building.client.email|default:"N/A" }}</p>
+        <p><strong>Phone:</strong> {{ building.client.phone|default:"N/A" }}</p>
+
+        <!-- Services Section -->
+        <h2>Services</h2>
+        <ul>
+            {% for service in building.services.all %}
+                <li>{{ service.name }}</li>
+            {% empty %}
+                <li>No services</li>
+            {% endfor %}
+        </ul>
+
+        <!-- Compliance Information Section -->
+        <h2>Compliance Information</h2>
+        <table>
+            <tr>
+                <th>Field</th>
+                <th>Value</th>
+            </tr>
+            <tr>
+                <td>LL87 Needed for 2025</td>
+                <td>{{ building.buildingcompliance.ll87_needed_2025|default:"N/A" }}</td>
+            </tr>
+            <tr>
+                <td>LL87 Filed</td>
+                <td>{{ building.buildingcompliance.ll87_filed|default:"N/A" }}</td>
+            </tr>
+            <tr>
+                <td>LL97 Schedule</td>
+                <td>{{ building.buildingcompliance.ll97_schedule|default:"N/A" }}</td>
+            </tr>
+            <tr>
+                <td>CBL LL97 Path for 2025</td>
+                <td>{{ building.buildingcompliance.cbl_ll97_path_2025|default:"N/A" }}</td>
+            </tr>
+            <tr>
+                <td>Field Schedule</td>
+                <td>{{ building.buildingcompliance.field_schedule|default:"N/A" }}</td>
+            </tr>
+            <tr>
+                <td>LL88 Lighting</td>
+                <td>{{ building.buildingcompliance.ll88_lighting|default:"N/A" }}</td>
+            </tr>
+            <tr>
+                <td>LL88 Submeter</td>
+                <td>{{ building.buildingcompliance.ll88_submeter|default:"N/A" }}</td>
+            </tr>
+            <tr>
+                <td>LL88 Needed</td>
+                <td>{{ building.buildingcompliance.ll88_needed|default:"N/A" }}</td>
+            </tr>
+            <tr>
+                <td>Proof Sent</td>
+                <td>{{ building.buildingcompliance.proof_sent|default:"N/A" }}</td>
+            </tr>
+            <tr>
+                <td>Request Info Date</td>
+                <td>{{ building.buildingcompliance.request_info_date|default:"N/A" }}</td>
+            </tr>
+            <tr>
+                <td>Invoice Sent</td>
+                <td>{{ building.buildingcompliance.invoice_sent|default:"N/A" }}</td>
+            </tr>
+            <tr>
+                <td>Request Share ESPM</td>
+                <td>{{ building.buildingcompliance.request_share_espm|default:"N/A" }}</td>
+            </tr>
+            <tr>
+                <td>ESPM Email</td>
+                <td>{{ building.buildingcompliance.espm_email|default:"N/A" }}</td>
+            </tr>
+            <tr>
+                <td>DOB NOW Email</td>
+                <td>{{ building.buildingcompliance.dob_now_email|default:"N/A" }}</td>
+            </tr>
+            <tr>
+                <td>Contact Email</td>
+                <td>{{ building.buildingcompliance.contact_email|default:"N/A" }}</td>
+            </tr>
+            <tr>
+                <td>DOB NOW Transaction #</td>
+                <td>{{ building.buildingcompliance.dob_now_transaction_number|default:"N/A" }}</td>
+            </tr>
+            <tr>
+                <td>DOB Filing Fee Paid</td>
+                <td>{{ building.buildingcompliance.dob_filing_fee_paid|default:"N/A" }}</td>
+            </tr>
+            <tr>
+                <td>DOB PMT Confirmation</td>
+                <td>{{ building.buildingcompliance.dob_pmt_confirmation|default:"N/A" }}</td>
+            </tr>
+            <tr>
+                <td>Attestation Received</td>
+                <td>{{ building.buildingcompliance.attestation_received|default:"N/A" }}</td>
+            </tr>
+            <tr>
+                <td>Complete Attestation</td>
+                <td>{{ building.buildingcompliance.complete_attestation|yesno:"Yes,No,N/A" }}</td>
+            </tr>
+            <tr>
+                <td>Proof of Correction</td>
+                <td>{{ building.buildingcompliance.proof_of_correction|default:"N/A" }}</td>
+            </tr>
+            <tr>
+                <td>Payment Cleared</td>
+                <td>{{ building.buildingcompliance.payment_cleared|yesno:"Yes,No,N/A" }}</td>
+            </tr>
+            <tr>
+                <td>ESPM Data in BEAM</td>
+                <td>{{ building.buildingcompliance.espm_data_in_beam|yesno:"Yes,No,N/A" }}</td>
+            </tr>
+            <tr>
+                <td>Attestation File</td>
+                <td>
+                    {% if building.buildingcompliance.attestation_file %}
+                        <a href="{{ building.buildingcompliance.attestation_file.url }}">Download</a>
+                    {% else %}
+                        No file
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td>Proof of Correction File</td>
+                <td>
+                    {% if building.buildingcompliance.proof_of_correction_file %}
+                        <a href="{{ building.buildingcompliance.proof_of_correction_file.url }}">Download</a>
+                    {% else %}
+                        No file
+                    {% endif %}
+                </td>
+            </tr>
+        </table>
+
+        <!-- Navigation Link -->
+        <p><a href="{% url 'home' %}">Back to Directory</a></p>
+    </div>
+</body>
+</html>
