@@ -1,0 +1,83 @@
+<!-- db/templates/client_detail.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Client Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            border-bottom: 2px solid #ccc;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #555;
+            margin-top: 20px;
+        }
+        p {
+            margin: 10px 0;
+        }
+        .building-list {
+            list-style: none;
+            padding: 0;
+        }
+        .building-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .building-list li:last-child {
+            border-bottom: none;
+        }
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        a:focus, .btn:focus {
+            outline: 2px solid #007bff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Client: {{ client.name }}</h1>
+        <p><strong>Email:</strong> {{ client.email }}</p>
+        <p><strong>Phone:</strong> {{ client.phone }}</p>
+        <h2>Buildings</h2>
+        <ul class="building-list">
+            {% for building in buildings %}
+                <li><a href="{% url 'building_compliance_detail' building.id %}">{{ building.address }}</a></li>
+            {% empty %}
+                <li>No buildings found for this client.</li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'home' %}" class="btn">Back to Directory</a>
+    </div>
+</body>
+</html>

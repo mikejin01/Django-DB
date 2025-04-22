@@ -5,6 +5,13 @@ import pandas as pd
 from django.contrib import messages
 import datetime
 
+
+
+def client_detail(request, client_id):
+    client = get_object_or_404(Client, id=client_id)
+    buildings = Building.objects.filter(client=client)
+    return render(request, 'client_detail.html', {'client': client, 'buildings': buildings})
+
 # Helper function to convert Excel dates to Python dates
 def to_date(value):
     """
