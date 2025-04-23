@@ -14,6 +14,15 @@ Install dependencies listed in `requirements.txt`.
 ```sh
 pip install -r requirements.txt
 ```
+Create database migrations
+```sh
+python3 manage.py makemigrations
+python3 manage.py migrate
+```
+Run development server
+```sh
+python3 manage.py runserver
+```
 
 ## IMPORTANT!!!
 If you added other packages, do not forget to add them to `requirements.txt`
