@@ -3,9 +3,24 @@ from .models import Building, Client, BuildingCompliance, Service
 from django.db.models import Q
 import pandas as pd
 from django.contrib import messages
+from django.urls import reverse  # Add this import
 import datetime
 
 
+
+
+
+def delete_all_data(request):
+    if request.method == 'POST':
+        try:
+            # Delete all records from Building and Client models
+            Building.objects.all().delete()
+            Client.objects.all().delete()
+            messages.success(request, "All buildings and clients have been deleted successfully.")
+        except Exception as e:
+            messages.error(request, f"An error occurred while deleting data: {str(e)}")
+        return redirect(reverse('directory') + '?tab=buildings')  # Redirect to the buildings tab
+    return redirect('directory')  # Redirect if not POST
 
 def client_detail(request, client_id):
     client = get_object_or_404(Client, id=client_id)

@@ -16,6 +16,7 @@
             width: 100%;
             max-width: none;
             margin: 0 auto;
+            position: relative; /* For positioning the dropdown */
         }
         form {
             text-align: center;
@@ -64,6 +65,59 @@
         .scrollable-table {
             overflow-x: auto;
         }
+        /* Styles for Manage Data button and dropdown */
+        .manage-data {
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+        .manage-data-btn {
+            padding: 8px 15px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .manage-data-btn:hover {
+            background-color: #0056b3;
+        }
+        .data-actions {
+            display: none; /* Hidden by default */
+            position: absolute;
+            top: 40px;
+            right: 0;
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 1000;
+            width: 250px;
+        }
+        .data-actions form {
+            margin-bottom: 10px;
+            text-align: left;
+        }
+        .data-actions input[type="file"] {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        .data-actions button {
+            width: 100%;
+            padding: 8px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .data-actions .import-btn {
+            background-color: #28a745;
+            color: white;
+        }
+        .data-actions .delete-btn {
+            background-color: #dc3545;
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -76,12 +130,23 @@
             <button type="submit">Search</button>
         </form>
 
-        <!-- Import Excel Form -->
-        <form method="post" enctype="multipart/form-data" action="{% url 'import_excel' %}">
-            {% csrf_token %}
-            <input type="file" name="excel_file" accept=".xlsx, .xls">
-            <button type="submit">Import</button>
-        </form>
+        <!-- Manage Data Button and Dropdown -->
+        <div class="manage-data">
+            <button class="manage-data-btn" onclick="toggleDataActions()">Manage Data</button>
+            <div class="data-actions" id="dataActions">
+                <!-- Import Excel Form -->
+                <form method="post" enctype="multipart/form-data" action="{% url 'import_excel' %}">
+                    {% csrf_token %}
+                    <input type="file" name="excel_file" accept=".xlsx, .xls">
+                    <button type="submit" class="import-btn">Import</button>
+                </form>
+                <!-- Delete All Data Button -->
+                <form method="post" action="{% url 'delete_all_data' %}" onsubmit="return confirm('Are you sure you want to delete all buildings and clients? This action cannot be undone.');">
+                    {% csrf_token %}
+                    <button type="submit" class="delete-btn">Delete All Data</button>
+                </form>
+            </div>
+        </div>
 
         <!-- Display messages if any -->
         {% if messages %}
@@ -130,7 +195,7 @@
                                 {{ service.name }}{% if not forloop.last %}, {% endif %}
                             {% endfor %}
                         </td>
-                        <td>{{ building.client.name }}</td> <!-- Fixed to use 'name' -->
+                        <td>{{ building.client.name }}</td>
                         <td>{{ building.client.email }}</td>
                         <td>{{ building.client.phone }}</td>
                         <td>{{ building.buildingcompliance.ll97_schedule }}</td>
@@ -173,5 +238,21 @@
         {% endif %}
 
     </div>
+
+    <script>
+        function toggleDataActions() {
+            const dataActions = document.getElementById('dataActions');
+            dataActions.style.display = dataActions.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const manageData = document.querySelector('.manage-data');
+            const dataActions = document.getElementById('dataActions');
+            if (!manageData.contains(event.target)) {
+                dataActions.style.display = 'none';
+            }
+        });
+    </script>
 </body>
 </html>
