@@ -45,3 +45,12 @@ SPECTACULAR_SETTINGS = {
 }
 
 ```
+
+added pandas and openpyxl
+```sh
+pip install pandas
+pip install openpyxl
+```
+
+added seed.py to /api (not functional yet)
+modified models.py in /api

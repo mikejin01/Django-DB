@@ -18,6 +18,7 @@ Create database migrations
 ```sh
 python3 manage.py makemigrations
 python3 manage.py migrate
+python3 manage.py seed
 ```
 Run development server
 ```sh
