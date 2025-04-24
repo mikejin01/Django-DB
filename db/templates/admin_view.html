@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Optional: Custom CSS for additional styling -->
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .container {
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
+        .dashboard-header {
+            margin-bottom: 30px;
+        }
+        .stats-card {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .table-container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .table th, .table td {
+            vertical-align: middle;
+        }
+        .btn-back {
+            margin-top: 20px;
+        }
+        .btn-update {
+            margin-left: 10px;
+        }
+        .btn-process-all {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="dashboard-header">
+            <h1 class="display-4">Admin Dashboard</h1>
+            <p class="lead">Welcome, admin! This page is only visible to you.</p>
+        </div>
+
+        <!-- Messages -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <!-- Statistics Section -->
+        <div class="stats-card">
+            <h2>Statistics</h2>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title">Total Buildings</h5>
+                            <p class="card-text fs-3">{{ building_count }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title">Total Clients</h5>
+                            <p class="card-text fs-3">{{ client_count }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title">Total Services</h5>
+                            <p class="card-text fs-3">{{ service_count }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title">Total Trackings</h5>
+                            <p class="card-text fs-3">{{ tracking_count }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Buildings Table -->
+        <div class="table-container">
+            <h2>Buildings</h2>
+            <!-- Process All Buildings Button -->
+            <a href="{% url 'process_all_buildings' %}" class="btn btn-primary btn-process-all">Process All Buildings</a>
+            {% if buildings %}
+                <table class="table table-striped table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th scope="col">Address</th>
+                            <th scope="col">Borough</th>
+                            <th scope="col">BBL</th>
+                            <th scope="col">BIN</th>
+                            <th scope="col">Number of BINs</th>
+                            <th scope="col">Client</th>
+                            <th scope="col">Services</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for building in buildings %}
+                            <tr>
+                                <td>{{ building.address }}</td>
+                                <td>{{ building.borough }}</td>
+                                <td>{{ building.BBL }}</td>
+                                <td>{{ building.BIN }}</td>
+                                <td>{{ building.number_of_bins }}</td>
+                                <td>{{ building.client.name }}</td>
+                                <td>
+                                    {% for service in building.services.all %}
+                                        {{ service.name }}{% if not forloop.last %}, {% endif %}
+                                    {% empty %}
+                                        None
+                                    {% endfor %}
+                                </td>
+                                <td>
+                                    <a href="{% url 'building_update_bins' building.id %}" class="btn btn-sm btn-warning btn-update">Update</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p class="text-muted">No buildings found.</p>
+            {% endif %}
+        </div>
+
+        <!-- Back to Home Button -->
+        <a href="{% url 'home' %}" class="btn btn-primary btn-back">Back to Home</a>
+    </div>
+
+    <!-- Bootstrap JS and Popper.js (for Bootstrap components) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

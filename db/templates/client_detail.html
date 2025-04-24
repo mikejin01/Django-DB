@@ -1,22 +1,141 @@
-<!-- db/templates/client_detail.html -->
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Client Details</title>
+    <title>Client Details for {{ client.name }}</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            line-height: 1.6;
+            background-color: #f9f9f9;
             margin: 0;
-            padding: 20px;
+            padding: 0;
         }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
+        .top-bar {
             background-color: #fff;
-            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            width: 100%;
+            margin: 0;
+            padding: 10px 0;
+            box-sizing: border-box;
+        }
+        .top-bar .top-bar-content {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            max-width: 1200px;
+            width: 100%;
+            justify-content: space-between;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+        .top-bar .home-link {
+            padding: 8px 15px;
+            background-color: #007BFF;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            line-height: 1.5;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        .top-bar .home-link:hover {
+            background-color: #0056b3;
+        }
+        .top-bar .auth-section {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .manage-data-btn {
+            padding: 8px 15px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            line-height: 1.5;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        .manage-data-btn:hover {
+            background-color: #0056b3;
+        }
+        .logout-btn, .login-btn {
+            padding: 8px 15px;
+            background-color: #dc3545;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            line-height: 1.5;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        .logout-btn:hover, .login-btn:hover {
+            background-color: #c82333;
+        }
+        .auth-greeting {
+            color: #333;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        .logout-form {
+            display: inline-flex;
+            margin: 0;
+        }
+        .data-actions {
+            display: none;
+            position: absolute;
+            top: 40px;
+            right: 0;
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 1000;
+            width: 250px;
+        }
+        .data-actions form {
+            margin-bottom: 10px;
+            text-align: left;
+        }
+        .data-actions input[type="text"], .data-actions input[type="file"], .data-actions select {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        .data-actions button {
+            width: 100%;
+            padding: 8px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .data-actions .import-btn {
+            background-color: #28a745;
+            color: white;
+        }
+        .data-actions .delete-btn {
+            background-color: #dc3545;
+            color: white;
+        }
+        .content {
+            max-width: 1200px; /* Match home.html max-width */
+            margin: 0 auto;
+            padding: 40px 20px; /* Adjusted for top bar spacing */
+            background-color: #fff;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-sizing: border-box;
         }
         h1 {
             color: #333;
@@ -30,16 +149,21 @@
         p {
             margin: 10px 0;
         }
-        .building-list {
-            list-style: none;
-            padding: 0;
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
         }
-        .building-list li {
-            padding: 10px 0;
-            border-bottom: 1px solid #eee;
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
         }
-        .building-list li:last-child {
-            border-bottom: none;
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #f5f5f5;
         }
         a {
             color: #007bff;
@@ -48,36 +172,286 @@
         a:hover {
             text-decoration: underline;
         }
-        .btn {
+        .back-link {
             display: inline-block;
             padding: 10px 15px;
             background-color: #007bff;
             color: white;
-            border-radius: 5px;
             text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
         }
-        .btn:hover {
+        .back-link:hover {
             background-color: #0056b3;
         }
-        a:focus, .btn:focus {
-            outline: 2px solid #007bff;
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+        }
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: 5px;
+            width: 80%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .modal-content table {
+            margin-top: 10px;
+        }
+        .modal-content .preview-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .modal-content th, .modal-content td {
+            border: 1px solid #ccc;
+            padding: 5px;
+            text-align: left;
+        }
+        .modal-content th {
+            background-color: #f0f0f0;
+        }
+        .modal-content .actions {
+            margin-top: 20px;
+            text-align: right;
+        }
+        .modal-content .confirm-btn {
+            background-color: #28a745;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .modal-content .cancel-btn {
+            background-color: #dc3545;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Client: {{ client.name }}</h1>
-        <p><strong>Email:</strong> {{ client.email }}</p>
-        <p><strong>Phone:</strong> {{ client.phone }}</p>
-        <h2>Buildings</h2>
-        <ul class="building-list">
-            {% for building in buildings %}
-                <li><a href="{% url 'building_compliance_detail' building.id %}">{{ building.address }}</a></li>
-            {% empty %}
-                <li>No buildings found for this client.</li>
-            {% endfor %}
-        </ul>
-        <a href="{% url 'home' %}" class="btn">Back to Directory</a>
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="top-bar-content">
+            <a href="{% url 'home' %}" class="home-link">Home</a>
+            <div class="auth-section">
+                {% if user.is_authenticated %}
+                    <span class="auth-greeting">Welcome, {{ user.username }}</span>
+                    <form method="post" action="{% url 'logout' %}" class="logout-form">
+                        {% csrf_token %}
+                        <button type="submit" class="logout-btn">Logout</button>
+                    </form>
+                    <button class="manage-data-btn" onclick="toggleDataActions()">Manage Data</button>
+                    <div class="data-actions" id="dataActions">
+                        <!-- Import Excel Form -->
+                        <form method="post" enctype="multipart/form-data" action="{% url 'import_excel' %}">
+                            {% csrf_token %}
+                            <input type="file" name="excel_file" accept=".xlsx, .xls">
+                            <select name="sheet_type" required>
+                                <option value="" disabled selected>Select Sheet Type</option>
+                                <option value="LL84-Benchmarking">LL84-Benchmarking</option>
+                                <option value="LL97">LL97</option>
+                            </select>
+                            <button type="submit" class="import-btn">Import from Excel</button>
+                        </form>
+                        <!-- Import Google Sheet Form -->
+                        <form id="gsheet-form" onsubmit="fetchPreview(event)">
+                            {% csrf_token %}
+                            <input type="text" name="sheet_id" placeholder="Enter Google Sheet ID" required>
+                            <button type="submit" class="import-btn">Preview Google Sheet Data</button>
+                        </form>
+                        <!-- Delete All Data Button -->
+                        <form method="post" action="{% url 'delete_all_data' %}" onsubmit="return confirm('Are you sure you want to delete all buildings and clients? This action cannot be undone.');">
+                            {% csrf_token %}
+                            <button type="submit" class="delete-btn">Delete All Data</button>
+                        </form>
+                    </div>
+                {% else %}
+                    <a href="{% url 'login' %}" class="login-btn">Login</a>
+                {% endif %}
+            </div>
+        </div>
     </div>
+
+    <div class="content">
+        <h1>Client Details for {{ client.name }}</h1>
+
+        <!-- Client Information Section -->
+        <div class="detail-section">
+            <h2>Client Information</h2>
+            <p><strong>Name:</strong> {{ client.name|default:"N/A" }}</p>
+            <p><strong>Phone:</strong> {{ client.phone|default:"N/A" }}</p>
+            <p><strong>Email:</strong> {{ client.email|default:"N/A" }}</p>
+            <p><strong>Contact Info:</strong> {{ client.contact_info|default:"N/A" }}</p>
+        </div>
+
+        <!-- Associated Buildings Section -->
+        <div class="detail-section">
+            <h2>Associated Buildings</h2>
+            {% if buildings %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Address</th>
+                            <th>Borough</th>
+                            <th>BBL</th>
+                            <th>BIN</th>
+                            <th>Number of Bins</th>
+                            <th>Services</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for building in buildings %}
+                            <tr>
+                                <td><a href="{% url 'building_detail' building.id %}">{{ building.address|default:"N/A" }}</a></td>
+                                <td>{{ building.borough|default:"N/A" }}</td>
+                                <td>{{ building.BBL|floatformat:0|default:"N/A" }}</td>
+                                <td>{{ building.BIN|floatformat:0|default:"N/A" }}</td>
+                                <td>{{ building.number_of_bins|default:"N/A" }}</td>
+                                <td>
+                                    {% for service in building.services.all %}
+                                        {{ service.name }}{% if not forloop.last %}, {% endif %}
+                                    {% empty %}
+                                        None
+                                    {% endfor %}
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr><td colspan="6">No buildings associated.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>No buildings associated.</p>
+            {% endif %}
+        </div>
+
+        <!-- Navigation Link -->
+        <a href="{% url 'home' %}?tab=clients" class="back-link">Back to Directory</a>
+    </div>
+
+    <script>
+        function toggleDataActions() {
+            const dataActions = document.getElementById('dataActions');
+            dataActions.style.display = dataActions.style.display === 'block' ? 'none' : 'block';
+        }
+
+        document.addEventListener('click', function(event) {
+            const dataActions = document.getElementById('dataActions');
+            const manageDataBtn = document.querySelector('.manage-data-btn');
+            if (!dataActions.contains(event.target) && !manageDataBtn.contains(event.target)) {
+                dataActions.style.display = 'none';
+            }
+        });
+
+        async function fetchPreview(event) {
+            event.preventDefault();
+            const form = document.getElementById('gsheet-form');
+            const sheetId = form.querySelector('input[name="sheet_id"]').value;
+            const csrfToken = form.querySelector('input[name="csrfmiddlewaretoken"]').value;
+
+            try {
+                const response = await fetch('{% url "preview_gsheet" %}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken
+                    },
+                    body: JSON.stringify({ sheet_id: sheetId })
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    displayPreview(data);
+                } else {
+                    alert('Error fetching preview: ' + (data.error || 'Unknown error'));
+                }
+            } catch (error) {
+                alert('Error fetching preview: ' + error.message);
+            }
+        }
+
+        function displayPreview(data) {
+            const modal = document.getElementById('previewModal');
+            const previewContent = document.getElementById('previewContent');
+
+            if (data.preview && data.preview.length > 0) {
+                let html = '<table class="preview-table"><thead><tr>';
+                const headers = Object.keys(data.preview[0]);
+                headers.forEach(header => {
+                    html += `<th>${header}</th>`;
+                });
+                html += '</tr></thead><tbody>';
+
+                data.preview.slice(0, 5).forEach(row => {
+                    html += '<tr>';
+                    headers.forEach(header => {
+                        html += `<td>${row[header] || ''}</td>`;
+                    });
+                    html += '</tr>';
+                });
+                html += '</tbody></table>';
+
+                if (data.preview.length > 5) {
+                    html += '<p>Showing first 5 rows. Total rows: ' + data.preview.length + '</p>';
+                }
+
+                previewContent.innerHTML = html;
+            } else {
+                previewContent.innerHTML = '<p>No data found in the sheet.</p>';
+            }
+
+            modal.dataset.sheetId = data.sheet_id;
+            modal.style.display = 'block';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('previewModal');
+            modal.style.display = 'none';
+            document.getElementById('previewContent').innerHTML = '';
+        }
+
+        async function confirmImport() {
+            const modal = document.getElementById('previewModal');
+            const sheetId = modal.dataset.sheetId;
+            const csrfToken = document.querySelector('#gsheet-form input[name="csrfmiddlewaretoken"]').value;
+
+            try {
+                const response = await fetch('{% url "import_gsheet" %}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken
+                    },
+                    body: JSON.stringify({ sheet_id: sheetId })
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    alert('Data imported successfully!');
+                    closeModal();
+                    window.location.reload();
+                } else {
+                    alert('Error importing data: ' + (data.error || 'Unknown error'));
+                }
+            } catch (error) {
+                alert('Error importing data: ' + error.message);
+            }
+        }
+    </script>
 </body>
 </html>

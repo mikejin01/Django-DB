@@ -1,4 +1,4 @@
-<!-- db/templates/building_detail.html -->
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,13 +9,145 @@
             font-family: Arial, sans-serif;
             line-height: 1.6;
             background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+        .top-bar {
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            width: 100%;
+            margin: 0;
+            padding: 10px 0;
+            box-sizing: border-box;
+        }
+        .top-bar .top-bar-content {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            max-width: 1200px;
+            width: 100%;
+            justify-content: space-between;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+        .top-bar .home-link {
+            padding: 8px 15px;
+            background-color: #007BFF;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            line-height: 1.5;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        .top-bar .home-link:hover {
+            background-color: #0056b3;
+        }
+        .top-bar .auth-section {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .manage-data-btn {
+            padding: 8px 15px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            line-height: 1.5;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        .manage-data-btn:hover {
+            background-color: #0056b3;
+        }
+        .logout-btn, .login-btn {
+            padding: 8px 15px;
+            background-color: #dc3545;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            line-height: 1.5;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        .logout-btn:hover, .login-btn:hover {
+            background-color: #c82333;
+        }
+        .auth-greeting {
+            color: #333;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        .logout-form {
+            display: inline-flex;
+            margin: 0;
+        }
+        .data-actions {
+            display: none;
+            position: absolute;
+            top: 40px;
+            right: 0;
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 1000;
+            width: 250px;
+        }
+        .data-actions form {
+            margin-bottom: 10px;
+            text-align: left;
+        }
+        .data-actions input[type="text"], .data-actions input[type="file"], .data-actions select {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        .data-actions button {
+            width: 100%;
+            padding: 8px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .data-actions .import-btn {
+            background-color: #28a745;
+            color: white;
+        }
+        .data-actions .delete-btn {
+            background-color: #dc3545;
+            color: white;
         }
         .content {
-            max-width: 800px;
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 40px 20px;
             background-color: #fff;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+        }
+        .sections-container {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .section {
+            flex: 1;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fafafa;
+            min-width: 0;
         }
         h1 {
             color: #333;
@@ -24,216 +156,594 @@
         }
         h2 {
             color: #555;
-            margin-top: 20px;
+            margin-top: 0;
+            margin-bottom: 10px;
         }
-        p, ul {
+        h3 {
+            color: #666;
+            margin-top: 15px;
+            margin-bottom: 5px;
+        }
+        p {
             margin: 10px 0;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-        th, td {
-            padding: 8px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        tr:hover {
-            background-color: #f5f5f5;
-        }
         a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .back-link {
             display: inline-block;
             padding: 10px 15px;
             background-color: #007bff;
             color: white;
             text-decoration: none;
             border-radius: 5px;
+            margin-top: 20px;
         }
-        a:hover {
+        .back-link:hover {
             background-color: #0056b3;
+        }
+        /* Accordion Styles */
+        .accordion {
+            margin-bottom: 10px;
+        }
+        .accordion-header {
+            background-color: #f2f2f2;
+            padding: 10px 15px;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            color: #333;
+            font-size: 16px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .accordion-header:hover {
+            background-color: #e0e0e0;
+        }
+        .accordion-header::after {
+            content: '▼';
+            font-size: 12px;
+            transition: transform 0.3s;
+        }
+        .accordion-header.active::after {
+            transform: rotate(180deg);
+        }
+        .accordion-content {
+            display: none;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-top: none;
+            border-radius: 0 0 5px 5px;
+            background-color: #fafafa;
+        }
+        .accordion-content.active {
+            display: block;
+        }
+        /* Form Styles */
+        .tracking-form {
+            margin-bottom: 20px;
+        }
+        .tracking-form label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        .tracking-form input[type="text"],
+        .tracking-form select {
+            margin-top: 5px;
+            padding: 5px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .tracking-form button {
+            margin-top: 10px;
+            padding: 8px 15px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .tracking-form button:hover {
+            background-color: #218838;
+        }
+        /* Original Data Styles */
+        .original-data {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .original-data pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+        }
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: 5px;
+            width: 80%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .modal-content h3 {
+            margin-top: 0;
+        }
+        .modal-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        .modal-content th, .modal-content td {
+            border: 1px solid #ccc;
+            padding: 5px;
+            text-align: left;
+        }
+        .modal-content th {
+            background-color: #f0f0f0;
+        }
+        .modal-content .actions {
+            margin-top: 20px;
+            text-align: right;
+        }
+        .modal-content .confirm-btn {
+            background-color: #28a745;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .modal-content .cancel-btn {
+            background-color: #dc3545;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        /* Responsive Design */
+        @media (max-width: 900px) {
+            .sections-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .section {
+                flex: none;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="top-bar-content">
+            <a href="{% url 'home' %}" class="home-link">Home</a>
+            <div class="auth-section">
+                {% if user.is_authenticated %}
+                    <span class="auth-greeting">Welcome, {{ user.username }}</span>
+                    <form method="post" action="{% url 'logout' %}" class="logout-form">
+                        {% csrf_token %}
+                        <button type="submit" class="logout-btn">Logout</button>
+                    </form>
+                    <button class="manage-data-btn" onclick="toggleDataActions()">Manage Data</button>
+                    <div class="data-actions" id="dataActions">
+                        <!-- Import Excel Form -->
+                        <form method="post" enctype="multipart/form-data" action="{% url 'import_excel' %}">
+                            {% csrf_token %}
+                            <input type="file" name="excel_file" accept=".xlsx, .xls">
+                            <select name="sheet_type" required>
+                                <option value="" disabled selected>Select Sheet Type</option>
+                                <option value="LL84-Benchmarking">LL84-Benchmarking</option>
+                                <option value="LL97">LL97</option>
+                            </select>
+                            <button type="submit" class="import-btn">Import from Excel</button>
+                        </form>
+                        <!-- Import Google Sheet Form -->
+                        <form id="gsheet-form" onsubmit="fetchPreview(event)">
+                            {% csrf_token %}
+                            <input type="text" name="sheet_id" placeholder="Enter Google Sheet ID" required>
+                            <button type="submit" class="import-btn">Preview Google Sheet Data</button>
+                        </form>
+                        <!-- Delete All Data Button -->
+                        <form method="post" action="{% url 'delete_all_data' %}" onsubmit="return confirm('Are you sure you want to delete all buildings and clients? This action cannot be undone.');">
+                            {% csrf_token %}
+                            <button type="submit" class="delete-btn">Delete All Data</button>
+                        </form>
+                    </div>
+                {% else %}
+                    <a href="{% url 'login' %}" class="login-btn">Login</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
     <div class="content">
         <h1>Building Details for {{ building.address }}</h1>
 
-        <!-- Building Information Section -->
-        <h2>Building Information</h2>
-        <p><strong>Address:</strong> {{ building.address }}</p>
-        <p><strong>BBL:</strong> {{ building.BBL }}</p>
-        <p><strong>BIN:</strong> {{ building.BIN }}</p>
-        <p><strong>Number of BINs:</strong> {{ building.number_of_bins }}</p>
-        <p><strong>ZOLA Link:</strong> 
-            {% if building.zola_link %}
-                <a href="{{ building.zola_link }}">Link</a>
-            {% else %}
-                N/A
-            {% endif %}
-        </p>
-        <p><strong>BIS BBL Link:</strong> 
-            {% if building.bis_bbl_link %}
-                <a href="{{ building.bis_bbl_link }}">Link</a>
-            {% else %}
-                N/A
-            {% endif %}
-        </p>
-        <p><strong>BIS Link:</strong> 
-            {% if building.bis_link %}
-                <a href="{{ building.bis_link }}">Link</a>
-            {% else %}
-                N/A
-            {% endif %}
-        </p>
-        <p><strong>ZOLA GFA:</strong> {{ building.zola_gfa|default:"N/A" }}</p>
-        <p><strong>Number of Floors:</strong> {{ building.number_of_floors|default:"N/A" }}</p>
-        <p><strong>Basement Code:</strong> {{ building.basement_code|default:"N/A" }}</p>
-        <p><strong>Uniformly Adjusted GFA:</strong> {{ building.uniformly_adjusted_gfa|default:"N/A" }}</p>
-        <p><strong>Adjusted GFA:</strong> {{ building.adjusted_gfa|default:"N/A" }}</p>
+        <div class="sections-container">
+            <!-- Building Information Section -->
+            <div class="section">
+                <h2>Building Information</h2>
+                <p><strong>Address:</strong> {{ building.address|default:"N/A" }}</p>
+                <p><strong>Borough:</strong> {{ building.borough|default:"N/A" }}</p>
+                <p><strong>BBL:</strong> {{ building.BBL|floatformat:0|default:"N/A" }}</p>
+                <p><strong>BIN:</strong> {{ building.BIN|floatformat:0|default:"N/A" }}</p>
+                <p><strong>Number of Bins:</strong> {{ building.number_of_bins|default:"N/A" }}</p>
+            </div>
 
-        <!-- Client Information Section -->
-        <h2>Client Information</h2>
-        <p><strong>Name:</strong> {{ building.client.name|default:"No client" }}</p>
-        <p><strong>Email:</strong> {{ building.client.email|default:"N/A" }}</p>
-        <p><strong>Phone:</strong> {{ building.client.phone|default:"N/A" }}</p>
+            <!-- Client Information Section -->
+            <div class="section">
+                <h2>Client Information</h2>
+                {% if building.client %}
+                    <p><strong>Name:</strong> <a href="{% url 'client_detail' building.client.id %}">{{ building.client.name|default:"N/A" }}</a></p>
+                    <p><strong>Phone:</strong> {{ building.client.phone|default:"N/A" }}</p>
+                    <p><strong>Email:</strong> {{ building.client.email|default:"N/A" }}</p>
+                    <p><strong>Contact Info:</strong> {{ building.client.contact_info|default:"N/A" }}</p>
+                {% else %}
+                    <p>No client assigned.</p>
+                {% endif %}
+            </div>
+
+            <!-- Activity Info Section -->
+            <div class="section">
+                <h2>Notes</h2>
+                <p>No recent notes</p>
+            </div>
+        </div>
 
         <!-- Services Section -->
-        <h2>Services</h2>
-        <ul>
-            {% for service in building.services.all %}
-                <li>{{ service.name }}</li>
-            {% empty %}
-                <li>No services</li>
-            {% endfor %}
-        </ul>
-
-        <!-- Compliance Information Section -->
-        <h2>Compliance Information</h2>
-        <table>
-            <tr>
-                <th>Field</th>
-                <th>Value</th>
-            </tr>
-            <tr>
-                <td>LL87 Needed for 2025</td>
-                <td>{{ building.buildingcompliance.ll87_needed_2025|default:"N/A" }}</td>
-            </tr>
-            <tr>
-                <td>LL87 Filed</td>
-                <td>{{ building.buildingcompliance.ll87_filed|default:"N/A" }}</td>
-            </tr>
-            <tr>
-                <td>LL97 Schedule</td>
-                <td>{{ building.buildingcompliance.ll97_schedule|default:"N/A" }}</td>
-            </tr>
-            <tr>
-                <td>CBL LL97 Path for 2025</td>
-                <td>{{ building.buildingcompliance.cbl_ll97_path_2025|default:"N/A" }}</td>
-            </tr>
-            <tr>
-                <td>Field Schedule</td>
-                <td>{{ building.buildingcompliance.field_schedule|default:"N/A" }}</td>
-            </tr>
-            <tr>
-                <td>LL88 Lighting</td>
-                <td>{{ building.buildingcompliance.ll88_lighting|default:"N/A" }}</td>
-            </tr>
-            <tr>
-                <td>LL88 Submeter</td>
-                <td>{{ building.buildingcompliance.ll88_submeter|default:"N/A" }}</td>
-            </tr>
-            <tr>
-                <td>LL88 Needed</td>
-                <td>{{ building.buildingcompliance.ll88_needed|default:"N/A" }}</td>
-            </tr>
-            <tr>
-                <td>Proof Sent</td>
-                <td>{{ building.buildingcompliance.proof_sent|default:"N/A" }}</td>
-            </tr>
-            <tr>
-                <td>Request Info Date</td>
-                <td>{{ building.buildingcompliance.request_info_date|default:"N/A" }}</td>
-            </tr>
-            <tr>
-                <td>Invoice Sent</td>
-                <td>{{ building.buildingcompliance.invoice_sent|default:"N/A" }}</td>
-            </tr>
-            <tr>
-                <td>Request Share ESPM</td>
-                <td>{{ building.buildingcompliance.request_share_espm|default:"N/A" }}</td>
-            </tr>
-            <tr>
-                <td>ESPM Email</td>
-                <td>{{ building.buildingcompliance.espm_email|default:"N/A" }}</td>
-            </tr>
-            <tr>
-                <td>DOB NOW Email</td>
-                <td>{{ building.buildingcompliance.dob_now_email|default:"N/A" }}</td>
-            </tr>
-            <tr>
-                <td>Contact Email</td>
-                <td>{{ building.buildingcompliance.contact_email|default:"N/A" }}</td>
-            </tr>
-            <tr>
-                <td>DOB NOW Transaction #</td>
-                <td>{{ building.buildingcompliance.dob_now_transaction_number|default:"N/A" }}</td>
-            </tr>
-            <tr>
-                <td>DOB Filing Fee Paid</td>
-                <td>{{ building.buildingcompliance.dob_filing_fee_paid|default:"N/A" }}</td>
-            </tr>
-            <tr>
-                <td>DOB PMT Confirmation</td>
-                <td>{{ building.buildingcompliance.dob_pmt_confirmation|default:"N/A" }}</td>
-            </tr>
-            <tr>
-                <td>Attestation Received</td>
-                <td>{{ building.buildingcompliance.attestation_received|default:"N/A" }}</td>
-            </tr>
-            <tr>
-                <td>Complete Attestation</td>
-                <td>{{ building.buildingcompliance.complete_attestation|yesno:"Yes,No,N/A" }}</td>
-            </tr>
-            <tr>
-                <td>Proof of Correction</td>
-                <td>{{ building.buildingcompliance.proof_of_correction|default:"N/A" }}</td>
-            </tr>
-            <tr>
-                <td>Payment Cleared</td>
-                <td>{{ building.buildingcompliance.payment_cleared|yesno:"Yes,No,N/A" }}</td>
-            </tr>
-            <tr>
-                <td>ESPM Data in BEAM</td>
-                <td>{{ building.buildingcompliance.espm_data_in_beam|yesno:"Yes,No,N/A" }}</td>
-            </tr>
-            <tr>
-                <td>Attestation File</td>
-                <td>
-                    {% if building.buildingcompliance.attestation_file %}
-                        <a href="{{ building.buildingcompliance.attestation_file.url }}">Download</a>
-                    {% else %}
-                        No file
-                    {% endif %}
-                </td>
-            </tr>
-            <tr>
-                <td>Proof of Correction File</td>
-                <td>
-                    {% if building.buildingcompliance.proof_of_correction_file %}
-                        <a href="{{ building.buildingcompliance.proof_of_correction_file.url }}">Download</a>
-                    {% else %}
-                        No file
-                    {% endif %}
-                </td>
-            </tr>
-        </table>
+        <div class="detail-section">
+            <h2>Services</h2>
+            {% if building.trackings.all %}
+                {% for tracking in building.trackings.all %}
+                    <div class="accordion">
+                        <div class="accordion-header" onclick="toggleAccordion(this)">
+                            {{ tracking.service.name }}
+                        </div>
+                        <div class="accordion-content">
+                            {% if tracking.service.name == "LL84" %}
+                                <!-- Editable LL84 Fields Form -->
+                                <form class="tracking-form" onsubmit="showConfirmationModal(event, this)">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="tracking_id" value="{{ tracking.id }}">
+                                    <label for="LL84_Price">Price:</label>
+                                    <input type="text" name="LL84_Price" value="{{ tracking.LL84_Price }}" required>
+                                    <label for="LL84_2020_Filed">2020 Filed:</label>
+                                    <select name="LL84_2020_Filed" required>
+                                        <option value="Yes" {% if tracking.LL84_2020_Filed %}selected{% endif %}>Yes</option>
+                                        <option value="No" {% if not tracking.LL84_2020_Filed %}selected{% endif %}>No</option>
+                                    </select>
+                                    <label for="LL84_2021PMT">2021 PMT:</label>
+                                    <input type="text" name="LL84_2021PMT" value="{{ tracking.LL84_2021PMT }}" required>
+                                    <label for="LL84_2022_Score_to_customer">2022 Score to Customer:</label>
+                                    <select name="LL84_2022_Score_to_customer" required>
+                                        <option value="Yes" {% if tracking.LL84_2022_Score_to_customer %}selected{% endif %}>Yes</option>
+                                        <option value="No" {% if not tracking.LL84_2022_Score_to_customer %}selected{% endif %}>No</option>
+                                    </select>
+                                    <label for="LL84_2023_Invoice_sent">2023 Invoice Sent:</label>
+                                    <select name="LL84_2023_Invoice_sent" required>
+                                        <option value="Yes" {% if tracking.LL84_2023_Invoice_sent %}selected{% endif %}>Yes</option>
+                                        <option value="No" {% if not tracking.LL84_2023_Invoice_sent %}selected{% endif %}>No</option>
+                                    </select>
+                                    <label for="LL84_2023_PMT">2023 PMT:</label>
+                                    <select name="LL84_2023_PMT" required>
+                                        <option value="Yes" {% if tracking.LL84_2023_PMT %}selected{% endif %}>Yes</option>
+                                        <option value="No" {% if not tracking.LL84_2023_PMT %}selected{% endif %}>No</option>
+                                    </select>
+                                    <label for="LL84_Submission">Submission:</label>
+                                    <select name="LL84_Submission" required>
+                                        <option value="Yes" {% if tracking.LL84_Submission %}selected{% endif %}>Yes</option>
+                                        <option value="No" {% if not tracking.LL84_Submission %}selected{% endif %}>No</option>
+                                    </select>
+                                    <label for="LL84_23_Grading">23 Grading:</label>
+                                    <select name="LL84_23_Grading" required>
+                                        <option value="Yes" {% if tracking.LL84_23_Grading %}selected{% endif %}>Yes</option>
+                                        <option value="No" {% if not tracking.LL84_23_Grading %}selected{% endif %}>No</option>
+                                    </select>
+                                    <label for="LL84_24_Outreach">24 Outreach:</label>
+                                    <select name="LL84_24_Outreach" required>
+                                        <option value="Yes" {% if tracking.LL84_24_Outreach %}selected{% endif %}>Yes</option>
+                                        <option value="No" {% if not tracking.LL84_24_Outreach %}selected{% endif %}>No</option>
+                                    </select>
+                                    <label for="LL84_2024_PMT">2024 PMT:</label>
+                                    <select name="LL84_2024_PMT" required>
+                                        <option value="Yes" {% if tracking.LL84_2024_PMT %}selected{% endif %}>Yes</option>
+                                        <option value="No" {% if not tracking.LL84_2024_PMT %}selected{% endif %}>No</option>
+                                    </select>
+                                    <label for="LL84_24_Submission">24 Submission:</label>
+                                    <select name="LL84_24_Submission" required>
+                                        <option value="Yes" {% if tracking.LL84_24_Submission %}selected{% endif %}>Yes</option>
+                                        <option value="No" {% if not tracking.LL84_24_Submission %}selected{% endif %}>No</option>
+                                    </select>
+                                    <label for="LL84_2024_Score">2024 Score:</label>
+                                    <input type="text" name="LL84_2024_Score" value="{{ tracking.LL84_2024_Score }}" required>
+                                    <label for="LL84_water_benchmark">Water Benchmark:</label>
+                                    <select name="LL84_water_benchmark" required>
+                                        <option value="Yes" {% if tracking.LL84_water_benchmark %}selected{% endif %}>Yes</option>
+                                        <option value="No" {% if not tracking.LL84_water_benchmark %}selected{% endif %}>No</option>
+                                    </select>
+                                    <label for="LL84_2025_Paid">2025 Paid:</label>
+                                    <select name="LL84_2025_Paid" required>
+                                        <option value="Yes" {% if tracking.LL84_2025_Paid %}selected{% endif %}>Yes</option>
+                                        <option value="No" {% if not tracking.LL84_2025_Paid %}selected{% endif %}>No</option>
+                                    </select>
+                                    <label for="LL84_2025_submission">2025 Submission:</label>
+                                    <input type="text" name="LL84_2025_submission" value="{{ tracking.LL84_2025_submission }}" required>
+                                    <label for="LL84_Confirmation_Email">Confirmation Email:</label>
+                                    <input type="text" name="LL84_Confirmation_Email" value="{{ tracking.LL84_Confirmation_Email }}" required>
+                                    <label for="LL84_Show_data_in_BEAM">Show Data in BEAM:</label>
+                                    <input type="text" name="LL84_Show_data_in_BEAM" value="{{ tracking.LL84_Show_data_in_BEAM }}" required>
+                                    <button type="submit">Save Changes</button>
+                                </form>
+                                <!-- Original Tracking Info -->
+                                <div class="original-data">
+                                    <h3>Original Data from Export</h3>
+                                    <pre>{{ tracking.tracking_info|default:"No data available" }}</pre>
+                                </div>
+                            {% else %}
+                                <p>{{ tracking.tracking_info|default:"No details available" }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No services available.</p>
+            {% endif %}
+        </div>
 
         <!-- Navigation Link -->
-        <p><a href="{% url 'home' %}">Back to Directory</a></p>
+        <p><a href="{% url 'home' %}?tab=buildings" class="back-link">Back to Directory</a></p>
     </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmationModal" class="modal">
+        <div class="modal-content">
+            <h3>Confirm Changes</h3>
+            <p>Please review the changes below:</p>
+            <table id="changesTable">
+                <thead>
+                    <tr>
+                        <th>Field</th>
+                        <th>Original Value</th>
+                        <th>New Value</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <div class="actions">
+                <button class="cancel-btn" onclick="closeConfirmationModal()">Cancel</button>
+                <button class="confirm-btn" onclick="confirmChanges()">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleDataActions() {
+            const dataActions = document.getElementById('dataActions');
+            dataActions.style.display = dataActions.style.display === 'block' ? 'none' : 'block';
+        }
+
+        document.addEventListener('click', function(event) {
+            const dataActions = document.getElementById('dataActions');
+            const manageDataBtn = document.querySelector('.manage-data-btn');
+            if (!dataActions.contains(event.target) && !manageDataBtn.contains(event.target)) {
+                dataActions.style.display = 'none';
+            }
+        });
+
+        function toggleAccordion(header) {
+            const content = header.nextElementSibling;
+            const isActive = header.classList.contains('active');
+
+            // Close all accordions
+            document.querySelectorAll('.accordion-header').forEach(h => {
+                h.classList.remove('active');
+                h.nextElementSibling.classList.remove('active');
+                h.nextElementSibling.style.display = 'none';
+            });
+
+            // Toggle the clicked accordion
+            if (!isActive) {
+                header.classList.add('active');
+                content.classList.add('active');
+                content.style.display = 'block';
+            }
+        }
+
+        let currentForm = null;
+
+        function showConfirmationModal(event, form) {
+            event.preventDefault();
+            currentForm = form;
+            const modal = document.getElementById('confirmationModal');
+            const changesTableBody = document.querySelector('#changesTable tbody');
+            changesTableBody.innerHTML = '';
+
+            // Get original values from tracking object
+            const trackingId = form.querySelector('input[name="tracking_id"]').value;
+            const fields = [
+                'LL84_Price',
+                'LL84_2020_Filed',
+                'LL84_2021PMT',
+                'LL84_2022_Score_to_customer',
+                'LL84_2023_Invoice_sent',
+                'LL84_2023_PMT',
+                'LL84_Submission',
+                'LL84_23_Grading',
+                'LL84_24_Outreach',
+                'LL84_2024_PMT',
+                'LL84_24_Submission',
+                'LL84_2024_Score',
+                'LL84_water_benchmark',
+                'LL84_2025_Paid',
+                'LL84_2025_submission',
+                'LL84_Confirmation_Email',
+                'LL84_Show_data_in_BEAM'
+            ];
+
+            fields.forEach(field => {
+                const input = form.querySelector(`[name="${field}"]`);
+                const isSelect = input.tagName === 'SELECT';
+                const originalValue = input.dataset.originalValue || (isSelect ? (input.dataset.originalValue === 'True' ? 'Yes' : 'No') : input.value);
+                const newValue = isSelect ? input.value : input.value;
+
+                if (originalValue !== newValue) {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${field.replace('LL84_', '').replace('_', ' ')}</td>
+                        <td>${originalValue}</td>
+                        <td>${newValue}</td>
+                    `;
+                    changesTableBody.appendChild(row);
+                }
+            });
+
+            if (changesTableBody.children.length === 0) {
+                alert('No changes detected.');
+                return;
+            }
+
+            modal.style.display = 'block';
+        }
+
+        function closeConfirmationModal() {
+            const modal = document.getElementById('confirmationModal');
+            modal.style.display = 'none';
+            document.querySelector('#changesTable tbody').innerHTML = '';
+            currentForm = null;
+        }
+
+        function confirmChanges() {
+            if (currentForm) {
+                currentForm.action = '{% url "update_tracking" %}';
+                currentForm.method = 'POST';
+                currentForm.submit();
+            }
+            closeConfirmationModal();
+        }
+
+        async function fetchPreview(event) {
+            event.preventDefault();
+            const form = document.getElementById('gsheet-form');
+            const sheetId = form.querySelector('input[name="sheet_id"]').value;
+            const csrfToken = form.querySelector('input[name="csrfmiddlewaretoken"]').value;
+
+            try {
+                const response = await fetch('{% url "preview_gsheet" %}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken
+                    },
+                    body: JSON.stringify({ sheet_id: sheetId })
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    displayPreview(data);
+                } else {
+                    alert('Error fetching preview: ' + (data.error || 'Unknown error'));
+                }
+            } catch (error) {
+                alert('Error fetching preview: ' + error.message);
+            }
+        }
+
+        function displayPreview(data) {
+            const modal = document.getElementById('previewModal');
+            const previewContent = document.getElementById('previewContent');
+
+            if (data.preview && data.preview.length > 0) {
+                let html = '<table class="preview-table"><thead><tr>';
+                const headers = Object.keys(data.preview[0]);
+                headers.forEach(header => {
+                    html += `<th>${header}</th>`;
+                });
+                html += '</tr></thead><tbody>';
+
+                data.preview.slice(0, 5).forEach(row => {
+                    html += '<tr>';
+                    headers.forEach(header => {
+                        html += `<td>${row[header] || ''}</td>`;
+                    });
+                    html += '</tr>';
+                });
+                html += '</tbody></table>';
+
+                if (data.preview.length > 5) {
+                    html += '<p>Showing first 5 rows. Total rows: ' + data.preview.length + '</p>';
+                }
+
+                previewContent.innerHTML = html;
+            } else {
+                previewContent.innerHTML = '<p>No data found in the sheet.</p>';
+            }
+
+            modal.dataset.sheetId = data.sheet_id;
+            modal.style.display = 'block';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('previewModal');
+            modal.style.display = 'none';
+            document.getElementById('previewContent').innerHTML = '';
+        }
+
+        async function confirmImport() {
+            const modal = document.getElementById('previewModal');
+            const sheetId = modal.dataset.sheetId;
+            const csrfToken = document.querySelector('#gsheet-form input[name="csrfmiddlewaretoken"]').value;
+
+            try {
+                const response = await fetch('{% url "import_gsheet" %}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken
+                    },
+                    body: JSON.stringify({ sheet_id: sheetId })
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    alert('Data imported successfully!');
+                    closeModal();
+                    window.location.reload();
+                } else {
+                    alert('Error importing data: ' + (data.error || 'Unknown error'));
+                }
+            } catch (error) {
+                alert('Error importing data: ' + error.message);
+            }
+        }
+
+        // Set original values for comparison
+        document.querySelectorAll('.tracking-form input, .tracking-form select').forEach(input => {
+            input.dataset.originalValue = input.tagName === 'SELECT' ? (input.options[0].value === 'Yes' ? 'True' : 'False') : input.value;
+        });
+    </script>
 </body>
 </html>
