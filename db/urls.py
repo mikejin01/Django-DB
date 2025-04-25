@@ -5,6 +5,7 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('client/<int:client_id>/', views.client_detail, name='client_detail'),
     path('import-excel/', views.import_excel, name='import_excel'),
+    # google sheets
     path('preview-gsheet/', views.preview_gsheet, name='preview_gsheet'),
     path('import-gsheet/', views.import_gsheet, name='import_gsheet'),
     path('delete-all-data/', views.delete_all_data, name='delete_all_data'),

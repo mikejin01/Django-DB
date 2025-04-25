@@ -150,7 +150,7 @@ def building_detail(request, building_id):
         'client': building.client,
         'trackings': building.trackings.all()
     }
-    return render(request, '-LL84-Benchmarking', context)
+    return render(request, 'building_detail.html', context)  # Changed from '-LL84-Benchmarking'
 
 def process_excel_import(request, sheet_type, excel_file):
     """Process Excel file import based on sheet type."""
@@ -431,3 +431,15 @@ def update_tracking(request):
         messages.error(request, f'Error updating tracking data: {str(e)}')
         
     return redirect('building_detail', building_id=tracking.building.id)
+
+
+@login_required
+def client_detail(request, client_id):
+    """Display client details and associated buildings."""
+    client = get_object_or_404(Client, id=client_id)
+    buildings = Building.objects.filter(client=client)
+    context = {
+        'client': client,
+        'buildings': buildings
+    }
+    return render(request, 'client_detail.html', context)
