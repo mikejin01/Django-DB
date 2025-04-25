@@ -1,2 +1,2 @@
-release: python manage.py migrate && python manage.py createsuperuser --noinput --username admin --email admin@example.com --password sf12345
+release: python manage.py migrate
 web: gunicorn core.wsgi:application
