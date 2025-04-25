@@ -28,7 +28,9 @@ DEBUG = True
 ALLOWED_HOSTS = ['192.168.1.162', 'localhost', '127.0.0.1',
                 'django-db-production.up.railway.app',
 ]
-
+CSRF_TRUSTED_ORIGINS = [
+    'https://django-db-production.up.railway.app',
+]
 
 # Application definition
 
